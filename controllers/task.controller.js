@@ -1,4 +1,4 @@
-import { db } from '../lib/dbConnect.js';
+п»їimport { db } from '../lib/dbConnect.js';
 import { ObjectId } from 'mongodb';
 const collection = db.collection('tasks');
 export const getTasksByUser = async (req, res, next) => {
@@ -6,21 +6,21 @@ export const getTasksByUser = async (req, res, next) => {
         const page = parseInt(req.query.page) || 1;
         const pageSize = 4;
         const query = { owner: new ObjectId(req.params.id) };
-        const { status, orderBy } = req.query; // Извлекаем параметры сортировки и фильтрации
-        const sort = orderBy ? { [orderBy]: 1 } : {}; // Формируем объект сортировки
+        const { status, orderBy } = req.query; // РР·РІР»РµРєР°РµРј РїР°СЂР°РјРµС‚СЂС‹ СЃРѕСЂС‚РёСЂРѕРІРєРё Рё С„РёР»СЊС‚СЂР°С†РёРё
+        const sort = orderBy ? { [orderBy]: 1 } : {}; // Р¤РѕСЂРјРёСЂСѓРµРј РѕР±СЉРµРєС‚ СЃРѕСЂС‚РёСЂРѕРІРєРё
 
         if (status) {
-            query['status'] = status; // Добавляем фильтр по статусу, если он указан
+            query['status'] = status; // Р”РѕР±Р°РІР»СЏРµРј С„РёР»СЊС‚СЂ РїРѕ СЃС‚Р°С‚СѓСЃСѓ, РµСЃР»Рё РѕРЅ СѓРєР°Р·Р°РЅ
         }
 
         const tasks = await collection
             .find(query)
-            .sort(sort) // Применяем сортировку
+            .sort(sort) // РџСЂРёРјРµРЅСЏРµРј СЃРѕСЂС‚РёСЂРѕРІРєСѓ
             .limit(pageSize)
             .skip((page - 1) * pageSize)
             .toArray();
 
-        const taskCount = await collection.countDocuments(query); // Изменено с count на countDocuments
+        const taskCount = await collection.countDocuments(query); // РР·РјРµРЅРµРЅРѕ СЃ count РЅР° countDocuments
         res.status(200).json({ tasks, taskCount });
     } catch (error) {
         next({ status: 500, error });
